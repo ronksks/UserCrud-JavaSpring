@@ -1,11 +1,12 @@
+#to create the containers locally from the Dockerfiles from
 #version: '3'
+#
 #services:
 #  frontend:
 #    build: ./client
 #    ports:
 #      - "3000:3000"
 #  api:
-#    build: .
 #    ports:
 #      - "8080:8080"
 #    depends_on:
@@ -14,45 +15,43 @@
 #      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/ppldb
 #      - SPRING_DATASOURCE_USERNAME=postgres
 #      - SPRING_DATASOURCE_PASSWORD=postgres
-#    volumes:
-#      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
 #  db:
-#    image: postgres
+#    build:  ./dbDocker
 #    restart: always
-#    environment:
-#      - POSTGRES_DB=ppldb
-#      - POSTGRES_USER=postgres
-#      - POSTGRES_PASSWORD=postgres
 #    ports:
-#      - "5432:5432"
-#    volumes:
-#      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-#
+#      - "5431:5432"
 #volumes:
 #  postgres-data:
+
+
+
+#to create the containers locally from my personal repository
 version: '3'
 
 services:
   frontend:
-    build: ./client
+    image: ronksks/usercrud-frontend:latest
     ports:
       - "3000:3000"
   api:
-    ports:
-      - "8080:8080"
-    depends_on:
-      - db
+    image: ronksks/usercrud-api:latest
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/ppldb
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
-    build:
-      context: .
-      dockerfile: Dockerfile
-  db:
-    build:  ./dbDocker
-    restart: always
     ports:
-      - "5431:5432"
-volumes:
-  postgres-data:
+      - "8080:8080"
+    depends_on:
+      - db
+  db:
+    image:  ronksks/usercrud-db:latest
+    restart: always
+    environment:
+      - POSTGRES_DB=ppldb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5430:5432"
